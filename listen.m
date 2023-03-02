@@ -19,10 +19,11 @@ flipVertical   = [];
 vSpacing       = 1.5;
 
 %Block name
-block_name = "listening";
+block_name = 'listening';
 
 %Set up folder to pull recordings from
-partner_folder = "P" + partner + "/";
+% partner_folder = "P" + partner + "/";
+partner_folder = sprintf('P%d/', partner);
 getRecordingsHere = fullfile(pwd, 'recordings/', partner_folder);
 
 %List of audio files
@@ -57,7 +58,7 @@ recordingEnd_message = 'Your study partner''s story has finished. If you''re rea
 if strcmp(inputDevice, 'keyboard')
     wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
 elseif strcmp(inputDevice, 'buttonbox')
-    wait_for_button_press = 'SimpleWFE(600, LH_red_button);'; %Wait for button 2
+    wait_for_button_press = 'wait_for_DP_buttons(600, LH_red_button);'; %Wait for button 2
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,7 +72,8 @@ for audio = 1:length(recordings_ordered)
     audiofile =  fullfile(getRecordingsHere, recording_name);
 
     %Buffer recording
-    pahandle  = bufferAudio(audiofile);
+    % pahandle  = bufferAudio(audiofile, 1); %Workroom
+    pahandle  = bufferAudio(audiofile, 3); %Lab labtop
 
     %Draw scan trigger wait screen
     DrawFormattedText(screenPointer, triggerWait_message, sx, sy, color, wrapat, flipHorizontal, flipVertical, vSpacing);
@@ -81,7 +83,8 @@ for audio = 1:length(recordings_ordered)
     if strcmp(inputDevice, 'keyboard')
         eval(wait_for_button_press);
     elseif strcmp(inputDevice, 'buttonbox')
-        SimpleWFE(600, trigger); %Wait for scan trigger
+        %Datapixx('RegWrVideoSync')
+        wait_for_DP_trigger(600, trigger); %Wait for scan trigger
     end
 
     %Get trigger onset time

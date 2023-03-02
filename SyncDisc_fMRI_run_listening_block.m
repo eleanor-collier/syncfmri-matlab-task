@@ -47,7 +47,7 @@ datafile = sprintf('output_data/listening_block/P%d.csv', subject); %Datafile na
 data     = {'subject' 'group' 'block' 'recording' 'triggerOT' 'recordingOT' 'recordingET'}; %Data column names (experiment data gets appended at the end of each block)
 
 %Button box/scanner trigger DINs
-trigger       = 11;
+trigger       = 9;
 LH_red_button = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,13 +79,18 @@ InitializePsychSound;
 %Open Datapixx
 if strcmp(inputDevice, 'buttonbox')
     Datapixx('Open');
+%     Datapixx('StopAllSchedules'); % stop any current schedule comment out
+%     Datapixx('RegWrRd'); % write local register, need prior to DataPixx read/write command comment out
+%     Datapixx('EnableDinDebounce'); % filer out button bounce within 30 ms. comment out
+%     Datapixx('SetDinLog');
+%     Datapixx('StartDinLog');
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% RUN EXPERIMENT
 
 %Experiment blocks
-instructs_for_listening(1);
+% instructs_for_listening(1);
 listen();
 instructs_for_listening(2);
 

@@ -78,15 +78,15 @@ for line = 1:length(currentInstructs)
   eval(wait_for_button_press);
 end
 
-%OPTIONAL: Draw scan trigger wait screen; if in scanner, wait for scan trigger, otherwise wait for button press
-currentWait_message = triggerWait_messages{instructNum};
-if ~isempty(currentWait_message)
-    DrawFormattedText(screenPointer, currentWait_message, sx, sy, color, wrapat, flipHorizontal, flipVertical, vSpacing);
-    Screen('Flip', screenPointer);
-    if strcmp(inputDevice, 'keyboard')
-        eval(wait_for_button_press);
-    end
-end
+% %OPTIONAL: Draw scan trigger wait screen; if in scanner, wait for scan trigger, otherwise wait for button press
+% currentWait_message = triggerWait_messages{instructNum};
+% if ~isempty(currentWait_message)
+%     DrawFormattedText(screenPointer, currentWait_message, sx, sy, color, wrapat, flipHorizontal, flipVertical, vSpacing);
+%     Screen('Flip', screenPointer);
+%     if strcmp(inputDevice, 'keyboard')
+%         eval(wait_for_button_press);
+%     end
+% end
 
 end
 

@@ -1,4 +1,4 @@
-function [pahandle] = playAudio(audiofile)
+function [pahandle] = playAudio(audiofile, device)
 
 %This function plays a specified audiofilefile on a specified screen and returns the audio start and end time. 
 %The name of a recording skip key can also be specified; [] will allow all keys to be skip keys. If inputDevice 
@@ -19,7 +19,7 @@ if nrchannels < 2
 end
 
 %Open sound buffer
-pahandle = PsychPortAudio('Open', [], [], 2, freq, nrchannels);
+pahandle = PsychPortAudio('Open', device, [], 2, freq, nrchannels);
 
 %Fill the audio playback buffer with the audio data 'wavedata':
 PsychPortAudio('FillBuffer', pahandle, wavedata);

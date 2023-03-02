@@ -45,7 +45,7 @@ datafile = sprintf('output_data/speaking_block/P%d.csv', subject); %Datafile nam
 data     = {'subject' 'group' 'block' 'recording' 'triggerOT' 'recordingOT' 'recordingET'}; %Data column names (experiment data gets appended at the end of each block)
 
 %Button box/scanner trigger DINs
-trigger       = 1;
+trigger       = 11;
 LH_red_button = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

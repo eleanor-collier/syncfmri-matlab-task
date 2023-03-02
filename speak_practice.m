@@ -21,12 +21,13 @@ vSpacing       = 1.5;
 recording_name = 'practice.wav';
 
 %Set up folder to save recordings to
-subject_folder = "P" + subject + "/";
+%subject_folder = 'P' + subject + '/';
+subject_folder = sprintf('P%d/', subject);
 saveAudioHere = fullfile(pwd, 'recordings/', subject_folder);
 if ~exist(saveAudioHere,'dir') mkdir(saveAudioHere); end
 
 %Recording length in seconds
-recordingLength = 5;
+recordingLength = 30;
 
 %Key to skip recording
 skipKey = 's';
@@ -41,7 +42,7 @@ recordingEnd_message = 'The practice session has ended. Please wait for the rese
 if strcmp(inputDevice, 'keyboard')
     wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
 elseif strcmp(inputDevice, 'buttonbox')
-    wait_for_button_press = 'SimpleWFE(600, LH_red_button);'; %Wait for button 2
+    wait_for_button_press = 'wait_for_DP_buttons(600, LH_red_button);'; %Wait for button 2
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -57,7 +58,7 @@ pahandle = bufferRecording(1);
 if strcmp(inputDevice, 'keyboard')
     eval(wait_for_button_press);
 elseif strcmp(inputDevice, 'buttonbox')
-    SimpleWFE(600, trigger); %Wait for scan trigger
+    wait_for_DP_trigger(600, trigger); %Wait for scan trigger
 end
 
 %Record audio

@@ -18,7 +18,7 @@ flipVertical   = [];
 vSpacing       = 1.5;
 
 %Block name
-block_name = "speaking";
+block_name = 'speaking';
 
 %List of names of stories for participant to share
 stories = {'POSITIVE EXPERIENCE #1', 'POSITIVE EXPERIENCE #2', 'NEGATIVE EXPERIENCE #1', 'NEGATIVE EXPERIENCE #2'};
@@ -39,7 +39,8 @@ elseif group == 2
 end
 
 %Set up folder to save recordings to
-subject_folder = "P" + subject + "/";
+% subject_folder = "P" + subject + "/";
+subject_folder = sprintf('P%d/', subject);
 saveRecordingsHere = fullfile(pwd, 'recordings/', subject_folder);
 if ~exist(saveRecordingsHere,'dir') mkdir(saveRecordingsHere); end
 
@@ -59,7 +60,7 @@ recordingEnd_message = 'Thank you for sharing your story. If you''re ready to sh
 if strcmp(inputDevice, 'keyboard')
     wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
 elseif strcmp(inputDevice, 'buttonbox')
-    wait_for_button_press = 'SimpleWFE(600, LH_red_button);'; %Wait for button 2
+    wait_for_button_press = 'wait_for_DP_buttons(600, LH_red_button);'; %Wait for button 2
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,7 +70,7 @@ end
 for story = 1:length(stories_ordered)
 
     %Buffer recording
-    pahandle = bufferRecording();
+    pahandle = bufferRecording(1);
 
     %Set path to recording wavfile
     recording_name = recordings_ordered{story};
@@ -87,7 +88,7 @@ for story = 1:length(stories_ordered)
     if strcmp(inputDevice, 'keyboard')
         eval(wait_for_button_press);
     elseif strcmp(inputDevice, 'buttonbox')
-        SimpleWFE(600, trigger); %Wait for scan trigger
+        wait_for_DP_trigger(600, trigger); %Wait for scan trigger
     end
 
     %Get trigger onset time
@@ -98,7 +99,7 @@ for story = 1:length(stories_ordered)
     
     %Update data with recording info
     data = [
-        data 
+        data
         subject group block_name recording_name tt t0 tf
         ];
 
