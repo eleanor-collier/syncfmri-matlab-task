@@ -63,6 +63,16 @@ elseif strcmp(inputDevice, 'buttonbox')
     wait_for_button_press = 'wait_for_DP_buttons(600, LH_red_button);'; %Wait for button 2
 end
 
+%Set mic ID based on input device
+devices = PsychPortAudio('GetDevices');
+if strcmp(inputDevice, 'keyboard')
+    mic_ID = 1; %Use computer's default mic
+elseif strcmp(inputDevice, 'buttonbox')
+%     mic_name = 'Line In (BEHRINGER USB WDM AUDIO)';
+%     mic_ID   = devices(strcmp({devices.DeviceName}, mic_name)).DeviceIndex;
+    mic_ID = 2;
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% START TASK
 
@@ -70,7 +80,8 @@ end
 for story = 1:length(stories_ordered)
 
     %Buffer recording
-    pahandle = bufferRecording(1);
+    % pahandle = bufferRecording(1);
+    pahandle = bufferRecording(mic_ID);
 
     %Set path to recording wavfile
     recording_name = recordings_ordered{story};
@@ -88,7 +99,7 @@ for story = 1:length(stories_ordered)
     if strcmp(inputDevice, 'keyboard')
         eval(wait_for_button_press);
     elseif strcmp(inputDevice, 'buttonbox')
-        wait_for_DP_trigger(600, trigger); %Wait for scan trigger
+        wait_for_DP_trigger(); %Wait for scan trigger
     end
 
     %Get trigger onset time
@@ -98,10 +109,7 @@ for story = 1:length(stories_ordered)
     [t0, tf] = recordAudio(newWavFile, recordingLength, pahandle, screenPointer, skipKey);
     
     %Update data with recording info
-    data = [
-        data
-        subject group block_name recording_name tt t0 tf
-        ];
+    data = [data; subject group {block_name} {recording_name} tt t0 tf];
 
     % Display end of recording message after every recording except for the last one
     if story < length(stories_ordered)

@@ -4,6 +4,9 @@ function [moviePtr] = bufferMovie(moviefile, screenPointer)
 %The name of a video skip key can also be specified; [] will allow all keys to be skip keys. If inputDevice 
 %is set to 'buttonbox,' the function will wait for a scan trigger from a specified port to start the video. 
 
+%Initialize audio driver
+InitializePsychSound;
+
 moviePtr  = Screen('OpenMovie', screenPointer, moviefile); 
 Screen('PlayMovie', moviePtr, 1);
 

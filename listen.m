@@ -61,6 +61,14 @@ elseif strcmp(inputDevice, 'buttonbox')
     wait_for_button_press = 'wait_for_DP_buttons(600, LH_red_button);'; %Wait for button 2
 end
 
+%Set sound output ID based on input device
+devices = PsychPortAudio('GetDevices');
+if strcmp(inputDevice, 'keyboard')
+    sound_out_ID = 3; %Use computer's default speakers; 1 for workroom, 3 for lab laptop
+elseif strcmp(inputDevice, 'buttonbox')
+    sound_out_ID   = 4; %Should never really need this in console room, but use 4 if needed for some reason
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% START TASK
 
@@ -71,9 +79,12 @@ for audio = 1:length(recordings_ordered)
     recording_name = recordings_ordered{audio};
     audiofile =  fullfile(getRecordingsHere, recording_name);
 
-    %Buffer recording
-    % pahandle  = bufferAudio(audiofile, 1); %Workroom
-    pahandle  = bufferAudio(audiofile, 3); %Lab labtop
+    %Buffer recording via computer or Datapixx
+    if strcmp(inputDevice, 'keyboard')
+        pahandle  = bufferAudio(audiofile, sound_out_ID);
+    elseif strcmp(inputDevice, 'buttonbox')
+        bufferAudio_DP(audiofile);
+    end
 
     %Draw scan trigger wait screen
     DrawFormattedText(screenPointer, triggerWait_message, sx, sy, color, wrapat, flipHorizontal, flipVertical, vSpacing);
@@ -83,21 +94,23 @@ for audio = 1:length(recordings_ordered)
     if strcmp(inputDevice, 'keyboard')
         eval(wait_for_button_press);
     elseif strcmp(inputDevice, 'buttonbox')
-        %Datapixx('RegWrVideoSync')
-        wait_for_DP_trigger(600, trigger); %Wait for scan trigger
+%         wait_for_DP_trigger(); %Wait for scan trigger
+%         eval(wait_for_button_press); % Troubleshooting only
+        RestrictKeysForKbCheck(KbName('rightarrow')); KbStrokeWait; RestrictKeysForKbCheck([]); %Troubleshooting only
     end
-
+   
     %Get trigger onset time
     tt = GetSecs;
 
-    %Play recording
-    [t0, tf]  = playAudio(pahandle, audioLength, screenPointer, skipKey);
+    %Play recording through internal speakers or Datapixx
+    if strcmp(inputDevice, 'keyboard')
+        [t0, tf]  = playAudio(pahandle, audioLength, screenPointer, skipKey);
+    elseif strcmp(inputDevice, 'buttonbox')
+        [t0, tf]  = playAudio_DP(audioLength, screenPointer, skipKey);
+    end
 
     %Update data with recording info
-    data = [
-        data 
-        subject group block_name recording_name tt t0 tf
-        ];
+    data = [data; subject group {block_name} {recording_name} tt t0 tf];
 
     % Display between-recording instructions after every recording except for the last one
     if audio < length(recordings_ordered)

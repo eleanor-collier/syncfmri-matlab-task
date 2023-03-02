@@ -22,7 +22,7 @@ if strcmp(inputDevice, 'keyboard')
     wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
     next_button = 'RIGHT ARROW KEY'; %Key label in instructions
 elseif strcmp(inputDevice, 'buttonbox')
-    wait_for_button_press = 'WaitSecs(1); SimpleWFE(600, LH_red_button)'; %Wait for 1 second, then wait for button 2
+    wait_for_button_press = 'WaitSecs(1); wait_for_DP_buttons(600, LH_red_button)'; %Wait for 1 second, then wait for button 2
     next_button = 'BUTTON 2'; %Key label in instructions
 end
 

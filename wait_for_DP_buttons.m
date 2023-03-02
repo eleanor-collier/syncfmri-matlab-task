@@ -1,5 +1,5 @@
 function [Bpress,Etime,RespTime,TheButtons] = SimpleWFE(responsetime, TargList)
-%TargList;  red=1, yellow=2, green=3, blue=4,trigger=9
+%TargList;  red=1, yellow=2, green=3, blue=4, trigger=9
 
 Etime=[];
 RespTime=[];
@@ -18,7 +18,7 @@ while ( (Datapixx('GetTime') < (startDtime + responsetime) ) && ~Bpress) %checks
             Etime =Datapixx('GetTime'); 
             RespTime=Etime-startDtime; % save time of first button press
         end
-        Datapixx('RegWrRd');  %checks in with datapixx
-        WaitSecs(.002); % avoids tight loop
+    Datapixx('RegWrRd');  %checks in with datapixx
+    WaitSecs(.002); % avoids tight loop
 end
 

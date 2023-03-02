@@ -41,8 +41,9 @@ elseif deviceID == 1
 end
 
 %Data info
-datafile = sprintf('output_data/speaking_block/P%d.csv', subject); %Datafile name & directory
-data     = {'subject' 'group' 'block' 'recording' 'triggerOT' 'recordingOT' 'recordingET'}; %Data column names (experiment data gets appended at the end of each block)
+datafile   = sprintf('output_data/speaking_block/P%d.csv', subject); %Datafile name & directory
+datafields = {'subject', 'group', 'block', 'recording', 'triggerOT', 'recordingOT', 'recordingET'}; %Data column names (experiment data gets appended at the end of each block)
+data       = [];
 
 %Button box/scanner trigger DINs
 trigger       = 11;
@@ -56,10 +57,10 @@ sca;
 
 %Set screen defaults
 Screen('Preference', 'SkipSyncTests', 1);
-Screen('Preference', 'DefaultFontName', 'Avenir Book');
+%Screen('Preference', 'DefaultFontName', 'Avenir Book');
+Screen('Preference', 'DefaultFontName', 'Helvetica');
 Screen('Preference', 'DefaultFontSize', 70);
 screens      = Screen('Screens');
-% screenNumber = 0;
 screenNumber = max(screens);
 white        = WhiteIndex(screenNumber);
 black        = BlackIndex(screenNumber);
@@ -72,7 +73,7 @@ HideCursor();
 [screenPointer, rect] = Screen('OpenWindow', screenNumber, black);
 
 %Initialize audio driver
-InitializePsychSound;
+% InitializePsychSound;
 
 %Open Datapixx
 if strcmp(inputDevice, 'buttonbox')
@@ -90,7 +91,8 @@ speak();
 instructs_for_speaking(3);
 
 %Save data
-writematrix(data, datafile);
+datatable = cell2table(data, 'VariableNames', datafields);
+writetable(datatable, datafile);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CLOSE EVERYTHING & CLEAN UP

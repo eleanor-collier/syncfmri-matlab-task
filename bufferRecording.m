@@ -5,8 +5,8 @@ if nargin < 1
     device = [];
 end
 
-% Perform basic initialization of the sound driver:
-% InitializePsychSound;
+%Initialize audio driver
+InitializePsychSound;
 
 % Open audio device 'device', with mode 2 (== Only audio capture),
 % and a required latencyclass of 1 == low-latency mode, with the preferred

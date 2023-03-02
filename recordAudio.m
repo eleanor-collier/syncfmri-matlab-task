@@ -21,13 +21,35 @@ recordedaudio = [];
 s = PsychPortAudio('GetStatus', pahandle);
 freq = s.SampleRate;
 
-% Stay in a loop until keypress or end of maxsecs:
-while ~KbCheck && ((length(recordedaudio) / freq) < maxsecs)
+waitsecs = 10;
 
-    % Display visual countdown
-    timeRemaining = round(maxsecs - (length(recordedaudio) / freq));
+% Record non-speech audio for length of waitsecs
+while ~KbCheck && ((length(recordedaudio) / freq) < (waitsecs))
+    
+    % Display visual countdown for waiting to speak
+    waitTimeRemaining = round(waitsecs - (length(recordedaudio) / freq));
+    waitTimeRemainingFormatted = char(duration(seconds(waitTimeRemaining),'format','mm:ss'));
+    DrawFormattedText(screenPointer, ['Recording starts in:\n\n', waitTimeRemainingFormatted], sx, sy, color);
+    Screen('Flip', screenPointer);
+    
+    % Wait one second
+    WaitSecs(1);
+    
+    % Retrieve pending audio data from the drivers internal ringbuffer:
+    audiodata = PsychPortAudio('GetAudioData', pahandle);
+
+    % And attach it to our full sound vector:
+    recordedaudio = [recordedaudio audiodata];
+    
+end
+
+% Stay in a loop until keypress or end of maxsecs:
+while ~KbCheck && ((length(recordedaudio) / freq) < (maxsecs + waitsecs))
+    
+    % Display visual countdown for speaking
+    timeRemaining = round(maxsecs - (length(recordedaudio) / freq - waitsecs));
     timeRemainingFormatted = char(duration(seconds(timeRemaining),'format','mm:ss'));
-    DrawFormattedText(screenPointer, timeRemainingFormatted, sx, sy, color);
+    DrawFormattedText(screenPointer, ['Time remaining:\n\n', timeRemainingFormatted], sx, sy, color);
     Screen('Flip', screenPointer);
     
     % Wait one second

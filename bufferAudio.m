@@ -1,8 +1,11 @@
-function [pahandle] = playAudio(audiofile, device)
+function [pahandle] = bufferAudio(audiofile, device)
 
 %This function plays a specified audiofilefile on a specified screen and returns the audio start and end time. 
 %The name of a recording skip key can also be specified; [] will allow all keys to be skip keys. If inputDevice 
 %is set to 'buttonbox,' the function will wait for a scan trigger from a specified port to start the audio. 
+
+%Initialize audio driver
+InitializePsychSound;
 
 %Read WAV file from filesystem:
 [y, freq] = psychwavread(audiofile);
