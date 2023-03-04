@@ -1,4 +1,4 @@
-function instructions(instructNum)
+function instructs_for_speaking(instructNum)
 %EmpOrient fMRI script to present instructions
 %Eleanor Collier
 %3/19/2018
@@ -6,7 +6,7 @@ function instructions(instructNum)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES
 %Global variables
-global screenPointer rect data subject group inputDevice trigger LH_red_button
+global screenPointer rect data subject subject_is_odd scanning LH_red_button
 
 %DrawFormattedText Defaults
 sx             = 'center';
@@ -17,13 +17,13 @@ flipHorizontal = [];
 flipVertical   = [];
 vSpacing       = 1.5;
 
-%Set screen advance commands based on input device
-if strcmp(inputDevice, 'keyboard')
+%Set screen advance commands based on whether scanning
+if scanning
+    wait_for_button_press = 'WaitSecs(1); wait_for_DP_buttons(600, LH_red_button)'; %Wait for 1 second, then wait for button 2
+    next_button = 'RED BUTTON'; %Key label in instructions
+else
     wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
     next_button = 'RIGHT ARROW KEY'; %Key label in instructions
-elseif strcmp(inputDevice, 'buttonbox')
-    wait_for_button_press = 'WaitSecs(1); wait_for_DP_buttons(600, LH_red_button)'; %Wait for 1 second, then wait for button 2
-    next_button = 'BUTTON 2'; %Key label in instructions
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,16 +77,6 @@ for line = 1:length(currentInstructs)
   Screen('Flip', screenPointer);
   eval(wait_for_button_press);
 end
-
-% %OPTIONAL: Draw scan trigger wait screen; if in scanner, wait for scan trigger, otherwise wait for button press
-% currentWait_message = triggerWait_messages{instructNum};
-% if ~isempty(currentWait_message)
-%     DrawFormattedText(screenPointer, currentWait_message, sx, sy, color, wrapat, flipHorizontal, flipVertical, vSpacing);
-%     Screen('Flip', screenPointer);
-%     if strcmp(inputDevice, 'keyboard')
-%         eval(wait_for_button_press);
-%     end
-% end
 
 end
 

@@ -6,7 +6,7 @@ function speak()
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES
 %Global variables
-global screenPointer rect data subject group inputDevice trigger LH_red_button
+global screenPointer rect data subject subject_is_odd scanning LH_red_button
 
 %DrawFormattedText Defaults
 sx             = 'center';
@@ -27,19 +27,17 @@ stories = {'POSITIVE EXPERIENCE #1', 'POSITIVE EXPERIENCE #2', 'NEGATIVE EXPERIE
 recordings = {'self_disclosure_pos1.wav', 'self_disclosure_pos2.wav', 'self_disclosure_neg1.wav', 'self_disclosure_neg2.wav'};
 
 %Order participant's disclosure sharing order based on even/odd ID:
-%If subject ID is odd, positive disclosures are recorded first
-if group == 1
+if subject_is_odd
+    %If subject ID is odd, positive disclosures are recorded first
     stories_ordered = {stories{1:2}, stories{3:4}};
     recordings_ordered = {recordings{1:2}, recordings{3:4}};
-
-%If subject ID is even, negative disclosures are recorded first
-elseif group == 2
+else
+    %If subject ID is even, negative disclosures are recorded first
     stories_ordered = {stories{3:4}, stories{1:2}};
     recordings_ordered = {recordings{3:4}, recordings{1:2}};
 end
 
 %Set up folder to save recordings to
-% subject_folder = "P" + subject + "/";
 subject_folder = sprintf('P%d/', subject);
 saveRecordingsHere = fullfile(pwd, 'recordings/', subject_folder);
 if ~exist(saveRecordingsHere,'dir') mkdir(saveRecordingsHere); end
@@ -51,26 +49,26 @@ recordingLength = 180;
 skipKey = 's';
 
 %Messages to display between recordings:
-% Message subject sees while waiting for scan trigger to start a new recording (excluding first recording - see instructs.m for that message)
+%Message subject sees while waiting for scan trigger to start a new recording (excluding first recording - see instructs.m for that message)
 triggerWait_message  = 'Story to share: storyName \n\nOnce the timer appears, you may begin talking.';
 %Message subject sees at end of each story
 recordingEnd_message = 'Thank you for sharing your story. If you''re ready to share your next one, advance to the next screen. ->'; 
 
-%Set screen advance commands based on input device
-if strcmp(inputDevice, 'keyboard')
-    wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
-elseif strcmp(inputDevice, 'buttonbox')
+%Set screen advance commands based on whether scanning
+if scanning
     wait_for_button_press = 'wait_for_DP_buttons(600, LH_red_button);'; %Wait for button 2
+else
+    wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
 end
 
 %Set mic ID based on input device
-devices = PsychPortAudio('GetDevices');
-if strcmp(inputDevice, 'keyboard')
+% devices = PsychPortAudio('GetDevices');
+if scanning
+    %mic_name = 'Line In (BEHRINGER USB WDM AUDIO)';
+    %mic_ID   = devices(strcmp({devices.DeviceName}, mic_name)).DeviceIndex;
+    mic_ID = 2; %Use external scanner-compatible mic
+else
     mic_ID = 1; %Use computer's default mic
-elseif strcmp(inputDevice, 'buttonbox')
-%     mic_name = 'Line In (BEHRINGER USB WDM AUDIO)';
-%     mic_ID   = devices(strcmp({devices.DeviceName}, mic_name)).DeviceIndex;
-    mic_ID = 2;
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -96,10 +94,10 @@ for story = 1:length(stories_ordered)
     Screen('Flip', screenPointer);
 
     %Wait for trigger
-    if strcmp(inputDevice, 'keyboard')
-        eval(wait_for_button_press);
-    elseif strcmp(inputDevice, 'buttonbox')
+    if scanning
         wait_for_DP_trigger(); %Wait for scan trigger
+    else
+        eval(wait_for_button_press);
     end
 
     %Get trigger onset time
@@ -109,7 +107,7 @@ for story = 1:length(stories_ordered)
     [t0, tf] = recordAudio(newWavFile, recordingLength, pahandle, screenPointer, skipKey);
     
     %Update data with recording info
-    data = [data; subject group {block_name} {recording_name} tt t0 tf];
+    data = [data; subject {block_name} {recording_name} tt t0 tf];
 
     % Display end of recording message after every recording except for the last one
     if story < length(stories_ordered)

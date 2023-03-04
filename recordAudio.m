@@ -21,7 +21,7 @@ recordedaudio = [];
 s = PsychPortAudio('GetStatus', pahandle);
 freq = s.SampleRate;
 
-waitsecs = 10;
+waitsecs = 9;
 
 % Record non-speech audio for length of waitsecs
 while ~KbCheck && ((length(recordedaudio) / freq) < (waitsecs))

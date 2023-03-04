@@ -11,8 +11,8 @@
 %DETAILS ABOUT THE BLOCK FUNCTIONS:
 %instructs:     Displays instructions on screen. All instruction text is
 %               contained in the instructs_for_listening.m script
-%listen:        Plays study partner's audio recordings in the order
-%               determined by the study partner's ID
+%listen:        Plays speaker's audio recordings in the order
+%               determined by the speaker's ID
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES
@@ -21,34 +21,36 @@ clear all;
 sca;
 
 %Global variables
-global screenPointer rect data subject partner group inputDevice trigger LH_red_button
+global screenPointer rect data subject session_ID speaker speaker_name speaker_is_odd scanning LH_red_button
 
-%Determine group number from user-specified subject ID (1 for odd subjects, 2 for even subjects)
+%Collect user-specified session number
+session_ID = input('Enter Session Number: '); % Make sure it doesn't override data
+
+%Collect user-specified subject ID for participant
 subject = input('Enter Subject ID: ');
-if mod(subject, 2)==0
-    group = 2;
+
+%Collect user-specified subject ID for speaker
+speaker = input('Enter Speaker ID: ');
+
+%Determine whether speaker ID is odd
+if mod(speaker, 2)==0
+    speaker_is_odd = 0;
 else
-    group = 1;
+    speaker_is_odd = 1;
 end
 
-%Collect user-specified subject ID for study partner
-partner = input('Enter Study Partner ID: ');
+%Collect user-specified name of speaker
+speaker_name = input('Enter First Name of Speaker: ');
 
-%Determine device (keyboard or button box) from user-specified device ID
-deviceID = input('Enter Device Type (0 = keyboard, 1 = button box): ');
-if deviceID     == 0
-    inputDevice = 'keyboard';
-elseif deviceID == 1
-    inputDevice = 'buttonbox';
-end
+%Determine whether scanning or not
+scanning = input('Scanning? (0 = no, 1 = yes): ');
 
 %Data info
-datafile   = sprintf('output_data/listening_block/P%d.csv', subject); %Datafile name & directory
-datafields = {'subject' 'group' 'block' 'recording' 'triggerOT' 'recordingOT' 'recordingET'}; %Data column names (experiment data gets appended at the end of each block)
+datafile   = sprintf('output_data/listening_block/P%d_session%d.csv', subject, session_ID); %Datafile name & directory
+datafields = {'ID' 'session_ID' 'speaker_ID' 'speaker_name' 'block' 'recording' 'triggerOT' 'recordingOT' 'recordingET'}; %Data column names (experiment data gets appended at the end of each block)
 data       = [];
 
-%Button box/scanner trigger DINs
-trigger       = 9;
+%Button box DINs
 LH_red_button = 1;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,20 +80,15 @@ HideCursor();
 % InitializePsychSound;
 
 %Open Datapixx
-if strcmp(inputDevice, 'buttonbox')
+if scanning
     Datapixx('Open');
-%     Datapixx('StopAllSchedules'); % stop any current schedule comment out
-%     Datapixx('RegWrRd'); % write local register, need prior to DataPixx read/write command comment out
-%     Datapixx('EnableDinDebounce'); % filer out button bounce within 30 ms. comment out
-%     Datapixx('SetDinLog');
-%     Datapixx('StartDinLog');
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% RUN EXPERIMENT
 
 %Experiment blocks
-% instructs_for_listening(1);
+instructs_for_listening(1);
 listen();
 instructs_for_listening(2);
 
@@ -102,7 +99,7 @@ writetable(datatable, datafile);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CLOSE EVERYTHING & CLEAN UP
 %Close Datapixx
-if strcmp(inputDevice, 'buttonbox')
+if scanning
     Datapixx('Close');
 end
 

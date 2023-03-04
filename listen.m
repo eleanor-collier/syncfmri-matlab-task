@@ -7,7 +7,7 @@ function listen()
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES
 %Global variables
-global screenPointer rect data subject partner group inputDevice trigger LH_red_button
+global screenPointer rect data subject session_ID speaker speaker_name subject_is_odd speaker_is_odd scanning LH_red_button
 
 %DrawFormattedText Defaults
 sx             = 'center';
@@ -22,9 +22,8 @@ vSpacing       = 1.5;
 block_name = 'listening';
 
 %Set up folder to pull recordings from
-% partner_folder = "P" + partner + "/";
-partner_folder = sprintf('P%d/', partner);
-getRecordingsHere = fullfile(pwd, 'recordings/', partner_folder);
+speaker_folder = sprintf('P%d/', speaker);
+getRecordingsHere = fullfile(pwd, 'recordings/', speaker_folder);
 
 %List of audio files
 recordings = {'self_disclosure_pos1.wav', 'self_disclosure_pos2.wav', 'self_disclosure_neg1.wav', 'self_disclosure_neg2.wav'};
@@ -32,17 +31,11 @@ recordings = {'self_disclosure_pos1.wav', 'self_disclosure_pos2.wav', 'self_disc
 %Audio length in seconds
 audioLength = 180;
 
-%Order recordings based on the order the study partner shared them in:
-
-%If subject ID is odd, then partner ID is even, so play negative
-%disclosures first
-if group == 1
-    recordings_ordered = {recordings{3:4}, recordings{1:2}};
-
-%If subject ID is even, then partner ID is odd, so play positive
-%disclosures first
-elseif group == 2
+%Order recordings based on the order the speaker shared them in:
+if speaker_is_odd
     recordings_ordered = {recordings{1:2}, recordings{3:4}};
+else
+    recordings_ordered = {recordings{3:4}, recordings{1:2}};
 end
 
 %Key to skip video
@@ -52,21 +45,21 @@ skipKey = 's';
 % Message subject sees while waiting for scan trigger to start a new recording (excluding first recording - see instructs.m for that message)
 triggerWait_message  = 'The next story will start playing soon.';  
 %Message subject sees at end of each recording
-recordingEnd_message = 'Your study partner''s story has finished. If you''re ready to listen to the next one, advance to the next screen. ->'; 
+recordingEnd_message = [speaker_name, '''s story has finished. Please wait for the experimenter to check in with you before advancing to the next screen. ->']; 
 
-%Set screen advance commands based on input device
-if strcmp(inputDevice, 'keyboard')
-    wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
-elseif strcmp(inputDevice, 'buttonbox')
+%Set screen advance commands based on whether scanning
+if scanning
     wait_for_button_press = 'wait_for_DP_buttons(600, LH_red_button);'; %Wait for button 2
+else
+    wait_for_button_press = 'RestrictKeysForKbCheck(KbName(''rightarrow'')); KbStrokeWait; RestrictKeysForKbCheck([]);'; %Wait for right arrow key
 end
 
-%Set sound output ID based on input device
+%Set sound output ID based on whether scanning
 devices = PsychPortAudio('GetDevices');
-if strcmp(inputDevice, 'keyboard')
+if scanning
+    sound_out_ID = 4; %Should never really need this in console room, but use 4 if needed for some reason
+else
     sound_out_ID = 3; %Use computer's default speakers; 1 for workroom, 3 for lab laptop
-elseif strcmp(inputDevice, 'buttonbox')
-    sound_out_ID   = 4; %Should never really need this in console room, but use 4 if needed for some reason
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,10 +73,10 @@ for audio = 1:length(recordings_ordered)
     audiofile =  fullfile(getRecordingsHere, recording_name);
 
     %Buffer recording via computer or Datapixx
-    if strcmp(inputDevice, 'keyboard')
-        pahandle  = bufferAudio(audiofile, sound_out_ID);
-    elseif strcmp(inputDevice, 'buttonbox')
+    if scanning
         bufferAudio_DP(audiofile);
+    else
+        pahandle  = bufferAudio(audiofile, sound_out_ID);
     end
 
     %Draw scan trigger wait screen
@@ -91,26 +84,25 @@ for audio = 1:length(recordings_ordered)
     Screen('Flip', screenPointer);
 
     %Wait for trigger
-    if strcmp(inputDevice, 'keyboard')
+    if scanning
+        wait_for_DP_trigger(); %Wait for scan trigger
+        % RestrictKeysForKbCheck(KbName('rightarrow')); KbStrokeWait; RestrictKeysForKbCheck([]); %Troubleshooting only
+    else
         eval(wait_for_button_press);
-    elseif strcmp(inputDevice, 'buttonbox')
-%         wait_for_DP_trigger(); %Wait for scan trigger
-%         eval(wait_for_button_press); % Troubleshooting only
-        RestrictKeysForKbCheck(KbName('rightarrow')); KbStrokeWait; RestrictKeysForKbCheck([]); %Troubleshooting only
     end
    
     %Get trigger onset time
     tt = GetSecs;
 
     %Play recording through internal speakers or Datapixx
-    if strcmp(inputDevice, 'keyboard')
-        [t0, tf]  = playAudio(pahandle, audioLength, screenPointer, skipKey);
-    elseif strcmp(inputDevice, 'buttonbox')
+    if scanning
         [t0, tf]  = playAudio_DP(audioLength, screenPointer, skipKey);
+    else
+        [t0, tf]  = playAudio(pahandle, audioLength, screenPointer, skipKey);
     end
 
     %Update data with recording info
-    data = [data; subject group {block_name} {recording_name} tt t0 tf];
+    data = [data; subject session_ID speaker {speaker_name} {block_name} {recording_name} tt t0 tf];
 
     % Display between-recording instructions after every recording except for the last one
     if audio < length(recordings_ordered)
@@ -118,6 +110,7 @@ for audio = 1:length(recordings_ordered)
         DrawFormattedText(screenPointer, recordingEnd_message, sx, sy, color, wrapat, flipHorizontal, flipVertical, vSpacing);
         Screen('Flip', screenPointer);
         eval(wait_for_button_press);
+        % RestrictKeysForKbCheck(KbName('rightarrow')); KbStrokeWait; RestrictKeysForKbCheck([]); %Troubleshooting only
     end
 
 end
