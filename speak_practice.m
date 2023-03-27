@@ -33,7 +33,7 @@ skipKey = 's';
 
 %Messages to display between recordings:
 %Message subject sees while waiting for scan trigger to start a new recording (excluding first recording - see instructs.m for that message)
-triggerWait_message  = 'Once the timer appears, you may begin talking.';
+triggerWait_message  = 'Once the 2nd timer appears, you may begin talking.';
 %Message subject sees at end of each story
 recordingEnd_message = 'The practice session has ended. Please wait for the researcher to check in with you. \n\nOnce the researcher says it''s okay, go ahead and advance to the next page. ->'; 
 

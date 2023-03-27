@@ -50,7 +50,7 @@ skipKey = 's';
 
 %Messages to display between recordings:
 %Message subject sees while waiting for scan trigger to start a new recording (excluding first recording - see instructs.m for that message)
-triggerWait_message  = 'Story to share: storyName \n\nOnce the timer appears, you may begin talking.';
+triggerWait_message  = 'Story to share: storyName \n\nOnce the 2nd timer appears, you may begin talking.';
 %Message subject sees at end of each story
 recordingEnd_message = 'Thank you for sharing your story. If you''re ready to share your next one, advance to the next screen. ->'; 
 

@@ -40,9 +40,9 @@ instructs = {
     'TIP #2: Notice the skin on your forehead where the tape is sticking to it. Try to talk in a way where you don''t feel the tape pulling on your skin.'
     'Alright, to help you practice talking without moving your head, let''s do a practice round. ->'
     'In this practice round, we''d like you to talk about your typical weekly schedule. As you talk, try to keep your head as still as possible.->'
-    'The practice round will last for 30 seconds. You''ll see a timer on the screen to help you keep track of time. ->'
+    'Before you start talking, a timer on the screen will count down until it''s time to start. \n\nAfter that, we would like you to talk for 30 seconds. You''ll see another timer to help you keep track of time while you talk. ->'
     'While you talk, there will be some loud noises from the scanner. Don''t be alarmed; this is normal. ->'
-    'If you have any questions, please let the researcher know! Once the scan starts, you will not be able to communicate with the researcher. \n\nIf you''re ready, advance to the next screen and wait until the timer appears to begin talking. ->'
+    'If you have any questions, please let the researcher know! Once the scan starts, you will not be able to communicate with the researcher. \n\nIf you''re ready, advance to the next screen and wait until the 2nd timer appears to start talking. ->'
     }
 
     {
@@ -50,7 +50,7 @@ instructs = {
     'As a reminder, we would like you to share 2 stories about positive experiences and 2 stories about negative experiences. ->'
     'Before each scan starts, you will see a prompt on the screen letting you know which story to share next (i.e., positive experience #1 or #2, or negative experience #1 or #2). ->'
     'When you begin your story, please remember NOT to explicitly state which story you are sharing. \n\nIn other words, do NOT say, "Now I will be talking about my first negative experience." Instead, simply tell your story without labeling it. ->'
-    'While you are speaking, you''ll see a timer on the screen to help you keep track of time. ->'
+    'As before, you will see an initial count-down timer, then another timer will appear to help you keep track of time while you talk. ->'
     'Each story should be as close to 3 minutes in length as possible. ->'
     'Try to include enough detail in your story so it lasts the entire 3 minutes. ->'
     'But also make sure not to go over 3 minutes. Once the timer ends, the recording will stop, so it''s important that you finish your story by then. ->'
