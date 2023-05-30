@@ -1,7 +1,7 @@
 function instructs_for_speaking(instructNum)
-%EmpOrient fMRI script to present instructions
+%SyncDisclosures fMRI script to present instructions
 %Eleanor Collier
-%3/19/2018
+%3/19/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES

@@ -1,7 +1,7 @@
 function speak_practice()
-%EmpOrient fMRI script to present practice question before main task begins
+%SyncDisclosures fMRI script to record practice disclosure
 %Eleanor Collier
-%3/19/2018
+%3/22/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES

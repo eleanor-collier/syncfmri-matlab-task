@@ -91,6 +91,10 @@ end
 instructs_for_listening(1);
 listen();
 instructs_for_listening(2);
+rest();
+instructs_for_listening(3);
+do_math();
+instructs_for_listening(4);
 
 %Save data
 datatable = cell2table(data, 'VariableNames', datafields);

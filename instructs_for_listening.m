@@ -1,7 +1,7 @@
 function instructs_for_listening(instructNum)
-%EmpOrient fMRI script to present instructions
+%SyncDisclosures fMRI script to present instructions
 %Eleanor Collier
-%3/19/2018
+%3/19/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES
@@ -38,7 +38,18 @@ instructs = {
     }
 
     {
-    ['You''ve reached the end of all of ', speaker_name, '''s stories. \n\nThis part of the study is now over. Press the ', next_button, ' to exit the session. ->']
+    ['You''ve reached the end of all of ', speaker_name, '''s stories. ->']
+    ['For the next minute, we''d like you to simply rest. You''ll see a timer on the screen, but feel free to close your eyes. \n\nPress the ', next_button, ' to begin the rest session. ->']
+    }
+    
+    {
+    ['Now we''d like you to do a few simple math problems. Don''t worry, they''ll be super easy. ->']
+    ['You''ll see a true or false statement on the screen, for example: 2 + 2 = 5. \n\nIf the statement is true, press the ', next_button, '. If the statement is false, do nothing. ->']
+    ['When you''re ready, press the ', next_button, ' to begin. ->']
+    }
+    
+    {
+    ['Great job! Press the ', next_button, ' to exit the window and wait for the researcher to check in with you. ->']
     }
 };
 

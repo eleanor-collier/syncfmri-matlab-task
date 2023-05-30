@@ -1,7 +1,7 @@
 function speak()
-%EmpOrient fMRI script to present blank rest screen & rest period questions
+%SyncDisclosures fMRI script to record disclosures in the desired order based on speaker ID
 %Eleanor Collier
-%3/19/2018
+%3/22/2023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES

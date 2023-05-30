@@ -1,6 +1,6 @@
 function listen()
-
-%EmpOrient fMRI script to present high-empathy videos
+%SyncDisclosures fMRI script to present recorded disclosures in the order
+%the speaker originally shared them in based on speaker ID
 %Eleanor Collier
 %3/19/2018
 
