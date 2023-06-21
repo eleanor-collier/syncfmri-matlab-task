@@ -43,7 +43,7 @@ skipKey = 's';
 
 %Messages to display between recordings
 % Message subject sees while waiting for scan trigger to start a new recording (excluding first recording - see instructs.m for that message)
-triggerWait_message  = 'The next story will start playing soon.';  
+triggerWait_message  = [speaker_name, '''s story will start playing soon. Please remember to keep your head still.'];  
 %Message subject sees at end of each recording
 recordingEnd_message = [speaker_name, '''s story has finished. Please wait for the experimenter to check in with you before advancing to the next screen. ->']; 
 

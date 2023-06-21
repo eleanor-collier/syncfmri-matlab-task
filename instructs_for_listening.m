@@ -33,6 +33,7 @@ instructs = {
     {
     ['Please read the following instructions carefully. To advance through the instruction pages, press the ', next_button, '. ->']
     ['In this scan session, you will listen to the stories ', speaker_name, ' shared. ->']
+    'When each story starts playing, there will be nine seconds of silence before you hear the speaker''s voice.'
     'Once again, please make sure not to move your head while you listen to the stories. ->'
     'If you have any questions, please let the researcher know! Once the scan starts, you will not be able to communicate with the researcher. \n\nIf you''re ready to begin, advance to the next screen. ->'
     }
