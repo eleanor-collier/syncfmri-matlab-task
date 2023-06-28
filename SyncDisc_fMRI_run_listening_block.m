@@ -13,6 +13,11 @@
 %               contained in the instructs_for_listening.m script
 %listen:        Plays speaker's audio recordings in the order
 %               determined by the speaker's ID
+%rest:          Displays a timer to allow participant to rest for allotted
+%               time
+%do_math        Displays true/false math statements on the screen. Does not
+%               actually record participants' button-presses, but tells
+%               participants it does in order to increase their engagement
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SET VARIABLES

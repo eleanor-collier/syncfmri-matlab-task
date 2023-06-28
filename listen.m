@@ -29,7 +29,7 @@ getRecordingsHere = fullfile(pwd, 'recordings/', speaker_folder);
 recordings = {'self_disclosure_pos1.wav', 'self_disclosure_pos2.wav', 'self_disclosure_neg1.wav', 'self_disclosure_neg2.wav'};
 
 %Audio length in seconds
-audioLength = 180;
+audioLength = 189;
 
 %Order recordings based on the order the speaker shared them in:
 if speaker_is_odd
