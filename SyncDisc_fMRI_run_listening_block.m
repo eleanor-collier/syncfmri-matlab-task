@@ -82,6 +82,9 @@ HideCursor();
 %Open Datapixx
 if scanning
     Datapixx('Open');
+    Datapixx('StopAllSchedules');
+    Datapixx('RegWrRd');
+    Datapixx('EnableDinDebounce');
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
